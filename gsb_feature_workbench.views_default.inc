@@ -44,14 +44,17 @@ function gsb_feature_workbench_views_default_views() {
     'type' => 'type',
     'status' => 'status',
     'timestamp' => 'timestamp',
-    'edit_node' => 'edit_node',
-    'is_published' => 'is_published',
+    'section' => 'section',
+    'name_1' => 'name_1',
+    'name' => 'name',
     'nid_1' => 'nid_1',
+    'edit_node' => 'edit_node',
+    'delete_node' => 'delete_node',
   );
   $handler->display->display_options['style_options']['default'] = 'timestamp';
   $handler->display->display_options['style_options']['info'] = array(
     'nid' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -85,12 +88,21 @@ function gsb_feature_workbench_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'edit_node' => array(
+    'section' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'is_published' => array(
+    'name_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -98,6 +110,16 @@ function gsb_feature_workbench_views_default_views() {
     'nid_1' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'delete_node' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -124,6 +146,11 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['relationships']['vid']['id'] = 'vid';
   $handler->display->display_options['relationships']['vid']['table'] = 'node_revision';
   $handler->display->display_options['relationships']['vid']['field'] = 'vid';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid_1']['relationship'] = 'vid';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -166,12 +193,25 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['fields']['section']['id'] = 'section';
   $handler->display->display_options['fields']['section']['table'] = 'workbench_access';
   $handler->display->display_options['fields']['section']['field'] = 'section';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
+  $handler->display->display_options['fields']['name_1']['table'] = 'users';
+  $handler->display->display_options['fields']['name_1']['field'] = 'name';
+  $handler->display->display_options['fields']['name_1']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name_1']['label'] = 'Updated By';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid_1';
+  $handler->display->display_options['fields']['name']['label'] = 'Author';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
   $handler->display->display_options['fields']['nid_1']['table'] = 'node';
   $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
   $handler->display->display_options['fields']['nid_1']['relationship'] = 'vid';
-  $handler->display->display_options['fields']['nid_1']['label'] = 'Node Id';
+  $handler->display->display_options['fields']['nid_1']['label'] = 'Id';
+  $handler->display->display_options['fields']['nid_1']['link_to_node'] = TRUE;
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
@@ -210,6 +250,71 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_1_op';
   $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
   $handler->display->display_options['filters']['title']['expose']['remember'] = TRUE;
+  /* Filter criterion: Content: Path */
+  $handler->display->display_options['filters']['alias']['id'] = 'alias';
+  $handler->display->display_options['filters']['alias']['table'] = 'url_alias';
+  $handler->display->display_options['filters']['alias']['field'] = 'alias';
+  $handler->display->display_options['filters']['alias']['relationship'] = 'vid';
+  $handler->display->display_options['filters']['alias']['operator'] = 'contains';
+  $handler->display->display_options['filters']['alias']['group'] = 1;
+  $handler->display->display_options['filters']['alias']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['alias']['expose']['operator_id'] = 'alias_op';
+  $handler->display->display_options['filters']['alias']['expose']['label'] = 'Path';
+  $handler->display->display_options['filters']['alias']['expose']['operator'] = 'alias_op';
+  $handler->display->display_options['filters']['alias']['expose']['identifier'] = 'alias';
+  $handler->display->display_options['filters']['alias']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    5 => 0,
+    4 => 0,
+  );
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Nid */
+  $handler->display->display_options['filters']['nid']['id'] = 'nid';
+  $handler->display->display_options['filters']['nid']['table'] = 'node';
+  $handler->display->display_options['filters']['nid']['field'] = 'nid';
+  $handler->display->display_options['filters']['nid']['relationship'] = 'vid';
+  $handler->display->display_options['filters']['nid']['group'] = 1;
+  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Node Id';
+  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
+  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    5 => 0,
+    4 => 0,
+  );
+  /* Filter criterion: Workbench Access: Access filter */
+  $handler->display->display_options['filters']['access_id']['id'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['table'] = 'workbench_access';
+  $handler->display->display_options['filters']['access_id']['field'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['group'] = 1;
+  $handler->display->display_options['filters']['access_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['access_id']['expose']['operator_id'] = 'access_id_op';
+  $handler->display->display_options['filters']['access_id']['expose']['label'] = 'Sections';
+  $handler->display->display_options['filters']['access_id']['expose']['operator'] = 'access_id_op';
+  $handler->display->display_options['filters']['access_id']['expose']['identifier'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['access_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    7 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+  );
+  $handler->display->display_options['filters']['access_id']['access_id'] = array();
+  $handler->display->display_options['filters']['access_id']['size'] = '1';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -220,6 +325,13 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
   $handler->display->display_options['filters']['type']['expose']['remember'] = TRUE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['relationship'] = 'vid';
+  $handler->display->display_options['filters']['type_1']['operator'] = 'not empty';
+  $handler->display->display_options['filters']['type_1']['group'] = 1;
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -243,69 +355,52 @@ function gsb_feature_workbench_views_default_views() {
     8 => 0,
     9 => 0,
   );
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
-  $handler->display->display_options['filters']['type_1']['table'] = 'node';
-  $handler->display->display_options['filters']['type_1']['field'] = 'type';
-  $handler->display->display_options['filters']['type_1']['relationship'] = 'vid';
-  $handler->display->display_options['filters']['type_1']['operator'] = 'not empty';
-  /* Filter criterion: Content: Nid */
-  $handler->display->display_options['filters']['nid']['id'] = 'nid';
-  $handler->display->display_options['filters']['nid']['table'] = 'node';
-  $handler->display->display_options['filters']['nid']['field'] = 'nid';
-  $handler->display->display_options['filters']['nid']['relationship'] = 'vid';
-  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
-  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Node Id';
-  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
-  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
-  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+  /* Filter criterion: Content: User has a revision */
+  $handler->display->display_options['filters']['uid_revision']['id'] = 'uid_revision';
+  $handler->display->display_options['filters']['uid_revision']['table'] = 'node';
+  $handler->display->display_options['filters']['uid_revision']['field'] = 'uid_revision';
+  $handler->display->display_options['filters']['uid_revision']['relationship'] = 'vid';
+  $handler->display->display_options['filters']['uid_revision']['value'] = '';
+  $handler->display->display_options['filters']['uid_revision']['group'] = 1;
+  $handler->display->display_options['filters']['uid_revision']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid_revision']['expose']['operator_id'] = 'uid_revision_op';
+  $handler->display->display_options['filters']['uid_revision']['expose']['label'] = 'Updated By';
+  $handler->display->display_options['filters']['uid_revision']['expose']['operator'] = 'uid_revision_op';
+  $handler->display->display_options['filters']['uid_revision']['expose']['identifier'] = 'uid_revision';
+  $handler->display->display_options['filters']['uid_revision']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
-    5 => 0,
     4 => 0,
+    5 => 0,
+    7 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
   );
-  /* Filter criterion: Content: Path */
-  $handler->display->display_options['filters']['alias']['id'] = 'alias';
-  $handler->display->display_options['filters']['alias']['table'] = 'url_alias';
-  $handler->display->display_options['filters']['alias']['field'] = 'alias';
-  $handler->display->display_options['filters']['alias']['relationship'] = 'vid';
-  $handler->display->display_options['filters']['alias']['operator'] = 'contains';
-  $handler->display->display_options['filters']['alias']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['alias']['expose']['operator_id'] = 'alias_op';
-  $handler->display->display_options['filters']['alias']['expose']['label'] = 'Path';
-  $handler->display->display_options['filters']['alias']['expose']['operator'] = 'alias_op';
-  $handler->display->display_options['filters']['alias']['expose']['identifier'] = 'alias';
-  $handler->display->display_options['filters']['alias']['expose']['remember_roles'] = array(
+  /* Filter criterion: Content: Updated date */
+  $handler->display->display_options['filters']['changed']['id'] = 'changed';
+  $handler->display->display_options['filters']['changed']['table'] = 'node';
+  $handler->display->display_options['filters']['changed']['field'] = 'changed';
+  $handler->display->display_options['filters']['changed']['relationship'] = 'vid';
+  $handler->display->display_options['filters']['changed']['operator'] = 'between';
+  $handler->display->display_options['filters']['changed']['group'] = 1;
+  $handler->display->display_options['filters']['changed']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['changed']['expose']['operator_id'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['label'] = 'Updated date';
+  $handler->display->display_options['filters']['changed']['expose']['operator'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['identifier'] = 'changed';
+  $handler->display->display_options['filters']['changed']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
-    5 => 0,
     4 => 0,
-  );
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_items'] = '10';
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_suggestion'] = 1;
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_dropdown'] = 1;
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_dependent'] = 0;
-  /* Filter criterion: Workbench Access: Access filter */
-  $handler->display->display_options['filters']['access_id']['id'] = 'access_id';
-  $handler->display->display_options['filters']['access_id']['table'] = 'workbench_access';
-  $handler->display->display_options['filters']['access_id']['field'] = 'access_id';
-  $handler->display->display_options['filters']['access_id']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['access_id']['expose']['operator_id'] = 'access_id_op';
-  $handler->display->display_options['filters']['access_id']['expose']['label'] = 'Section';
-  $handler->display->display_options['filters']['access_id']['expose']['operator'] = 'access_id_op';
-  $handler->display->display_options['filters']['access_id']['expose']['identifier'] = 'access_id';
-  $handler->display->display_options['filters']['access_id']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
     5 => 0,
-    4 => 0,
+    7 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
   );
-  $handler->display->display_options['filters']['access_id']['access_id'] = array();
-  $handler->display->display_options['filters']['access_id']['size'] = '5';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
@@ -389,28 +484,9 @@ function gsb_feature_workbench_views_default_views() {
         ),
       ),
     ),
-    'type' => array(
+    'alias' => array(
       'bef_format' => 'default',
       'more_options' => array(
-        'bef_select_all_none' => FALSE,
-        'bef_collapsible' => 0,
-        'is_secondary' => 0,
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'status' => array(
-      'bef_format' => 'default',
-      'more_options' => array(
-        'bef_select_all_none' => FALSE,
-        'bef_collapsible' => 0,
         'is_secondary' => 0,
         'bef_filter_description' => '',
         'tokens' => array(
@@ -445,7 +521,7 @@ function gsb_feature_workbench_views_default_views() {
         ),
       ),
     ),
-    'uid_revision' => array(
+    'type' => array(
       'bef_format' => 'default',
       'more_options' => array(
         'bef_select_all_none' => FALSE,
@@ -462,10 +538,44 @@ function gsb_feature_workbench_views_default_views() {
         ),
       ),
     ),
-    'alias' => array(
+    'status' => array(
       'bef_format' => 'default',
       'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'name' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'is_secondary' => 1,
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'uid_revision' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'is_secondary' => 1,
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
@@ -492,21 +602,6 @@ function gsb_feature_workbench_views_default_views() {
         ),
       ),
     ),
-    'name' => array(
-      'bef_format' => 'default',
-      'more_options' => array(
-        'is_secondary' => 0,
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
   );
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
@@ -519,10 +614,13 @@ function gsb_feature_workbench_views_default_views() {
     'title' => 'title',
     'type' => 'type',
     'status' => 'status',
-    'name' => 'name',
     'changed' => 'changed',
+    'name_1' => 'name_1',
+    'name' => 'name',
+    'nid_1' => 'nid_1',
     'edit_node' => 'edit_node',
-    'nid' => 'section',
+    'delete_node' => 'delete_node',
+    'nid' => 'nid',
   );
   $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
@@ -538,28 +636,52 @@ function gsb_feature_workbench_views_default_views() {
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
+      'empty_column' => 0,
     ),
     'status' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
-    ),
-    'name' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
+      'empty_column' => 0,
     ),
     'changed' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
     ),
     'edit_node' => array(
       'align' => '',
       'separator' => '',
+      'empty_column' => 0,
+    ),
+    'delete_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
     ),
     'nid' => array(
       'sortable' => 1,
@@ -568,15 +690,7 @@ function gsb_feature_workbench_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'section' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
   );
-  $handler->display->display_options['style_options']['order'] = 'desc';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -591,6 +705,10 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
   $handler->display->display_options['relationships']['uid_1']['table'] = 'node_revision';
   $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  /* Relationship: Content revision: Content */
+  $handler->display->display_options['relationships']['vid']['id'] = 'vid';
+  $handler->display->display_options['relationships']['vid']['table'] = 'node_revision';
+  $handler->display->display_options['relationships']['vid']['field'] = 'vid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -624,7 +742,6 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['fields']['name_1']['relationship'] = 'uid_1';
   $handler->display->display_options['fields']['name_1']['label'] = 'Updated By';
   $handler->display->display_options['fields']['name_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['name_1']['link_to_user'] = FALSE;
   /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
@@ -633,6 +750,13 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = 'Author';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['hide_alter_empty'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+  $handler->display->display_options['fields']['nid_1']['table'] = 'node';
+  $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid_1']['relationship'] = 'vid';
+  $handler->display->display_options['fields']['nid_1']['label'] = 'Id';
+  $handler->display->display_options['fields']['nid_1']['link_to_node'] = TRUE;
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
@@ -648,11 +772,6 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['fields']['delete_node']['label'] = '';
   $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['delete_node']['text'] = 'delete';
-  /* Field: Content: Nid */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'node';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['label'] = 'Node Id';
   /* Sort criterion: Content: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
   $handler->display->display_options['sorts']['changed']['table'] = 'node';
@@ -668,6 +787,75 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['filters']['title']['expose']['label'] = 'Title';
   $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
   $handler->display->display_options['filters']['title']['expose']['remember'] = TRUE;
+  /* Filter criterion: Content: Path */
+  $handler->display->display_options['filters']['alias']['id'] = 'alias';
+  $handler->display->display_options['filters']['alias']['table'] = 'url_alias';
+  $handler->display->display_options['filters']['alias']['field'] = 'alias';
+  $handler->display->display_options['filters']['alias']['operator'] = 'contains';
+  $handler->display->display_options['filters']['alias']['group'] = 1;
+  $handler->display->display_options['filters']['alias']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['alias']['expose']['operator_id'] = 'alias_op';
+  $handler->display->display_options['filters']['alias']['expose']['label'] = 'Path';
+  $handler->display->display_options['filters']['alias']['expose']['operator'] = 'alias_op';
+  $handler->display->display_options['filters']['alias']['expose']['identifier'] = 'alias';
+  $handler->display->display_options['filters']['alias']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    5 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+    8 => 0,
+  );
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['alias']['expose']['autocomplete_dependent'] = 0;
+  /* Filter criterion: Content: Nid */
+  $handler->display->display_options['filters']['nid']['id'] = 'nid';
+  $handler->display->display_options['filters']['nid']['table'] = 'node';
+  $handler->display->display_options['filters']['nid']['field'] = 'nid';
+  $handler->display->display_options['filters']['nid']['group'] = 1;
+  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Node Id';
+  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
+  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    5 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+    8 => 0,
+  );
+  /* Filter criterion: Workbench Access: Access filter */
+  $handler->display->display_options['filters']['access_id']['id'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['table'] = 'workbench_access';
+  $handler->display->display_options['filters']['access_id']['field'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['group'] = 1;
+  $handler->display->display_options['filters']['access_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['access_id']['expose']['operator_id'] = 'access_id_op';
+  $handler->display->display_options['filters']['access_id']['expose']['label'] = 'Sections';
+  $handler->display->display_options['filters']['access_id']['expose']['operator'] = 'access_id_op';
+  $handler->display->display_options['filters']['access_id']['expose']['identifier'] = 'access_id';
+  $handler->display->display_options['filters']['access_id']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['access_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    7 => 0,
+    6 => 0,
+    8 => 0,
+    9 => 0,
+  );
+  $handler->display->display_options['filters']['access_id']['access_id'] = array();
+  $handler->display->display_options['filters']['access_id']['size'] = '1';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -703,26 +891,35 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['filters']['status_extra']['table'] = 'node';
   $handler->display->display_options['filters']['status_extra']['field'] = 'status_extra';
   $handler->display->display_options['filters']['status_extra']['group'] = 1;
-  /* Filter criterion: Content: Nid */
-  $handler->display->display_options['filters']['nid']['id'] = 'nid';
-  $handler->display->display_options['filters']['nid']['table'] = 'node';
-  $handler->display->display_options['filters']['nid']['field'] = 'nid';
-  $handler->display->display_options['filters']['nid']['group'] = 1;
-  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
-  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Node Id';
-  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
-  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
-  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+  /* Filter criterion: User: Name (raw) */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'users';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['relationship'] = 'uid';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['group'] = 1;
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Author';
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
-    5 => 0,
     4 => 0,
-    6 => 0,
+    5 => 0,
     7 => 0,
+    6 => 0,
     8 => 0,
+    9 => 0,
   );
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_field'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['name']['expose']['autocomplete_dependent'] = 0;
   /* Filter criterion: Content: User has a revision */
   $handler->display->display_options['filters']['uid_revision']['id'] = 'uid_revision';
   $handler->display->display_options['filters']['uid_revision']['table'] = 'node';
@@ -744,36 +941,12 @@ function gsb_feature_workbench_views_default_views() {
     7 => 0,
     8 => 0,
   );
-  /* Filter criterion: Content: Path */
-  $handler->display->display_options['filters']['alias']['id'] = 'alias';
-  $handler->display->display_options['filters']['alias']['table'] = 'url_alias';
-  $handler->display->display_options['filters']['alias']['field'] = 'alias';
-  $handler->display->display_options['filters']['alias']['operator'] = 'contains';
-  $handler->display->display_options['filters']['alias']['group'] = 1;
-  $handler->display->display_options['filters']['alias']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['alias']['expose']['operator_id'] = 'alias_op';
-  $handler->display->display_options['filters']['alias']['expose']['label'] = 'Path';
-  $handler->display->display_options['filters']['alias']['expose']['operator'] = 'alias_op';
-  $handler->display->display_options['filters']['alias']['expose']['identifier'] = 'alias';
-  $handler->display->display_options['filters']['alias']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    5 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
-    8 => 0,
-  );
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_items'] = '10';
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_suggestion'] = 1;
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_raw_dropdown'] = 1;
-  $handler->display->display_options['filters']['alias']['expose']['autocomplete_dependent'] = 0;
   /* Filter criterion: Date: Date (node) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['operator'] = 'between';
+  $handler->display->display_options['filters']['date_filter']['group'] = 1;
   $handler->display->display_options['filters']['date_filter']['exposed'] = TRUE;
   $handler->display->display_options['filters']['date_filter']['expose']['operator_id'] = 'date_filter_op';
   $handler->display->display_options['filters']['date_filter']['expose']['label'] = 'Date (node)';
@@ -801,32 +974,6 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
     'node.changed' => 'node.changed',
   );
-  /* Filter criterion: User: Name (raw) */
-  $handler->display->display_options['filters']['name']['id'] = 'name';
-  $handler->display->display_options['filters']['name']['table'] = 'users';
-  $handler->display->display_options['filters']['name']['field'] = 'name';
-  $handler->display->display_options['filters']['name']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['name']['operator'] = 'contains';
-  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
-  $handler->display->display_options['filters']['name']['expose']['label'] = 'Author';
-  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
-  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-    7 => 0,
-    6 => 0,
-    8 => 0,
-  );
-  $handler->display->display_options['filters']['name']['expose']['autocomplete_items'] = '10';
-  $handler->display->display_options['filters']['name']['expose']['autocomplete_field'] = 'name';
-  $handler->display->display_options['filters']['name']['expose']['autocomplete_raw_suggestion'] = 1;
-  $handler->display->display_options['filters']['name']['expose']['autocomplete_raw_dropdown'] = 1;
-  $handler->display->display_options['filters']['name']['expose']['autocomplete_dependent'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');

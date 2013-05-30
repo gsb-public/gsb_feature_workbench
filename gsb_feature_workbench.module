@@ -1,11 +1,14 @@
 <?php
 /**
  * @file
- * Code for the GSB Feature Workbench Temp feature.
+ * Code for the GSB Feature Workbench feature.
  */
 
 include_once 'gsb_feature_workbench.features.inc';
 
+/**
+ * Implements hook_menu_alter().
+ */
 function gsb_feature_workbench_menu_alter(&$items) {
 
   // If the workbench sections tab page is defined,
@@ -21,6 +24,27 @@ function gsb_feature_workbench_menu_alter(&$items) {
 
 }
 
+/**
+ * Implements hook_views_default_views_alter().
+ */
+function gsb_feature_workbench_views_default_views_alter(&$views) {
+
+  // Remove the workbench "drafts", "needs review" tabs,
+  // by disabling the workbench_moderation view.
+
+  if (isset($views['workbench_moderation'])) {
+    $views['workbench_moderation']->disabled = TRUE;
+  }
+
+  if (isset($views['workbench_current_user'])) {
+    $views['workbench_current_user']->disabled = TRUE;
+  }
+
+}
+
+/**
+ * Implements hook_workbench_content_alter().
+ */
 function gsb_feature_workbench_workbench_content_alter(&$output) {
 
   // Remove the "My Profile" block from the workbench page
