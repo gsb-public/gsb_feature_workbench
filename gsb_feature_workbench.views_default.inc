@@ -347,52 +347,6 @@ function gsb_feature_workbench_views_default_views() {
     8 => 0,
     9 => 0,
   );
-  /* Filter criterion: Content: User has a revision */
-  $handler->display->display_options['filters']['uid_revision']['id'] = 'uid_revision';
-  $handler->display->display_options['filters']['uid_revision']['table'] = 'node';
-  $handler->display->display_options['filters']['uid_revision']['field'] = 'uid_revision';
-  $handler->display->display_options['filters']['uid_revision']['relationship'] = 'vid';
-  $handler->display->display_options['filters']['uid_revision']['value'] = '';
-  $handler->display->display_options['filters']['uid_revision']['group'] = 1;
-  $handler->display->display_options['filters']['uid_revision']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['uid_revision']['expose']['operator_id'] = 'uid_revision_op';
-  $handler->display->display_options['filters']['uid_revision']['expose']['label'] = 'Updated By';
-  $handler->display->display_options['filters']['uid_revision']['expose']['operator'] = 'uid_revision_op';
-  $handler->display->display_options['filters']['uid_revision']['expose']['identifier'] = 'uid_revision';
-  $handler->display->display_options['filters']['uid_revision']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-    7 => 0,
-    6 => 0,
-    8 => 0,
-    9 => 0,
-  );
-  /* Filter criterion: Content: Updated date */
-  $handler->display->display_options['filters']['changed']['id'] = 'changed';
-  $handler->display->display_options['filters']['changed']['table'] = 'node';
-  $handler->display->display_options['filters']['changed']['field'] = 'changed';
-  $handler->display->display_options['filters']['changed']['relationship'] = 'vid';
-  $handler->display->display_options['filters']['changed']['operator'] = 'between';
-  $handler->display->display_options['filters']['changed']['group'] = 1;
-  $handler->display->display_options['filters']['changed']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['changed']['expose']['operator_id'] = 'changed_op';
-  $handler->display->display_options['filters']['changed']['expose']['label'] = 'Updated date';
-  $handler->display->display_options['filters']['changed']['expose']['operator'] = 'changed_op';
-  $handler->display->display_options['filters']['changed']['expose']['identifier'] = 'changed';
-  $handler->display->display_options['filters']['changed']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-    7 => 0,
-    6 => 0,
-    8 => 0,
-    9 => 0,
-  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');

@@ -25,6 +25,46 @@ function gsb_feature_workbench_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function gsb_feature_workbench_form_alter(&$form, $form_state) {
+  // hide the items per page for the workbench pages and set to a default of 30
+  if ($form['#id'] == 'views-exposed-form-gsb-workbench-recent-content-page-1' ||
+      $form['#id'] == 'views-exposed-form-gsb-workbench-edited-page-1') {
+    if (isset($form['items_per_page']['#default_value'])) {
+      $form['items_per_page']['#default_value'] = 30;
+      $form['items_per_page']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_date_popup_process_alter().
+ */
+function gsb_feature_workbench_date_popup_process_alter(&$element, &$form_state, $context) {
+
+  if (isset($context['form']['#id']) && $context['form']['#id'] == 'views-exposed-form-gsb-workbench-recent-content-page-1') {
+
+    // Hide the date description
+    if (isset($element['date']['#description'])) {
+      unset($element['date']['#description']);
+    }
+
+    // Change the label to be 'Start Date'
+    if (isset($element['#id']) && $element['#id'] == 'edit-date-filter-min') {
+      $element['#title'] = "Start Date";
+    }
+
+    // Change the label to be 'End Date'
+    if (isset($element['#id']) && $element['#id'] == 'edit-date-filter-max') {
+      $element['#title'] = "End Date";
+    }
+
+  }
+
+}
+
+/**
  * Implements hook_views_default_views_alter().
  */
 function gsb_feature_workbench_views_default_views_alter(&$views) {
