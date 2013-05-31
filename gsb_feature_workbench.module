@@ -47,6 +47,10 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
       $form['access_id']['#default_value'] = key($form['access_id']['#options']);
     }
   }
+  // expand the fieldset
+  if ($form_state['input']['name'] || $form_state['input']['uid_revision'] || $form_state['input']['date_filter']['min']['date'] || $form_state['input']['date_filter']['max']['date']) {
+       $form['secondary']['#collapsed'] = FALSE;
+  }
 }
 
 /**
@@ -99,7 +103,7 @@ function gsb_feature_workbench_views_default_views_alter(&$views) {
 function gsb_feature_workbench_workbench_content_alter(&$output) {
 
   // Remove the "My Profile" block from the workbench page
-  
+
   if (isset($output['workbench_current_user'])) {
     unset($output['workbench_current_user']);
   }
@@ -146,7 +150,7 @@ function gsb_feature_workbench_workbench_content_alter(&$output) {
   if (isset($output['workbench_edited'])) {
     unset($output['workbench_edited']);
   }
-  
+
   $output['gsb_workbench_edited'] = array(
     '#view' => 'gsb_workbench_edited',
     '#view_display' => 'block_1',
