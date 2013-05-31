@@ -46,10 +46,10 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
       $form['access_id']['#value'] = array(key($form['access_id']['#options']));
       $form['access_id']['#default_value'] = key($form['access_id']['#options']);
     }
-  }
-  // expand the fieldset
-  if ($form_state['input']['name'] || $form_state['input']['uid_revision'] || $form_state['input']['date_filter']['min']['date'] || $form_state['input']['date_filter']['max']['date']) {
-       $form['secondary']['#collapsed'] = FALSE;
+    // expand the fieldset
+    if ($form_state['input']['name'] || $form_state['input']['uid_revision'] || $form_state['input']['date_filter']['min']['date'] || $form_state['input']['date_filter']['max']['date']) {
+         $form['secondary']['#collapsed'] = FALSE;
+    } 
   }
 }
 

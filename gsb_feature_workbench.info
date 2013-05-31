@@ -13,3 +13,10 @@ features[ctools][] = views:views_default:3.0
 features[features_api][] = api:1
 features[views_view][] = gsb_workbench_edited
 features[views_view][] = gsb_workbench_recent_content
+
+
+; Information added by drush on 2013-05-31
+version = "master-dev"
+project = "gsb_feature_workbench"
+datestamp = "1370042989"
+
