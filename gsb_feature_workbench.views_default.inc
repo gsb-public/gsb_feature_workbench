@@ -409,7 +409,7 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['bef'] = array(
     'general' => array(
       'allow_secondary' => 1,
-      'secondary_label' => 'Advanced Filter Settings',
+      'secondary_label' => 'More filters',
     ),
     'title' => array(
       'bef_format' => 'default',
