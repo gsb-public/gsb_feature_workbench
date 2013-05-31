@@ -35,6 +35,17 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
       $form['items_per_page']['#default_value'] = 30;
       $form['items_per_page']['#access'] = FALSE;
     }
+    // Set the 'Author' field to size 60, to match 'Update by'
+    if (isset($form['secondary']['name'])) {
+      $form['secondary']['name']['#size'] = 60;
+    }
+    // Make the 'Section' a single-line combobox
+    if (isset($form['access_id'])) {
+      $form['access_id']['#size'] = null;
+      unset($form['access_id']['#multiple']);
+      $form['access_id']['#value'] = array(key($form['access_id']['#options']));
+      $form['access_id']['#default_value'] = key($form['access_id']['#options']);
+    }
   }
 }
 
@@ -106,7 +117,7 @@ function gsb_feature_workbench_workbench_content_alter(&$output) {
   }
   $create_menu .= '</ul>';
   if ($node_types) {
-    $node_types_output .= '<div class="create-menu-title">You can create the following content:</div>';
+    $node_types_output .= '<div class="create-menu-title">Create Content</div>';
     $node_types_output .= $create_menu;
   }
 
@@ -135,11 +146,11 @@ function gsb_feature_workbench_workbench_content_alter(&$output) {
   if (isset($output['workbench_edited'])) {
     unset($output['workbench_edited']);
   }
-
+  
   $output['gsb_workbench_edited'] = array(
     '#view' => 'gsb_workbench_edited',
     '#view_display' => 'block_1',
-    '#attributes' => array('class' => array('clearfix'), 'style' => array('clear: both;')),
+    '#attributes' => array('class' => array('right', 'clearfix')),
     '#theme' => 'workbench_element',
   );
 
