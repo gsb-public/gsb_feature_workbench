@@ -180,3 +180,33 @@ function _gsb_workbench_get_user_node_types() {
   }
   return $types;
 }
+
+function gsb_feature_workbench_views_pre_view(&$view, &$display_id, &$args) {
+
+  // This shorthand variable will increase readability.
+  $current_display = $view->current_display;
+
+  // If the current display uses the default fields, target them.
+  if ($current_display== 'default' || $view->display[$current_display]->handler->options['defaults']['fields']) {
+    $fields = &$view->display['default']->handler->options['fields'];
+  }
+  // Otherwise, target this display's fields.
+  else {
+    $fields = &$view->display[$current_display]->handler->options['fields'];
+  }
+
+  unset($fields['section']);
+
+  // This temporary variable will take all the values from
+  // the existing fields array and add a section field after the nid_1.
+  $new_view_fields = array();
+  foreach ($fields as $key => $value) {
+    $new_view_fields[$key] = $value;
+    if ($key == 'nid_1') {
+      $new_view_fields['section'] = _workbench_access_views_section_field_definition();
+    }
+  }
+
+  // Set the new fields array on the actual view.
+  $fields = $new_view_fields;
+}

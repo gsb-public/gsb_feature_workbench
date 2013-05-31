@@ -164,10 +164,6 @@ function gsb_feature_workbench_views_default_views() {
   $handler->display->display_options['fields']['nid_1']['relationship'] = 'vid';
   $handler->display->display_options['fields']['nid_1']['label'] = 'Node ID';
   $handler->display->display_options['fields']['nid_1']['link_to_node'] = TRUE;
-  /* Field: Workbench Access: Section */
-  $handler->display->display_options['fields']['section']['id'] = 'section';
-  $handler->display->display_options['fields']['section']['table'] = 'workbench_access';
-  $handler->display->display_options['fields']['section']['field'] = 'section';
   /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
