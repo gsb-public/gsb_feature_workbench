@@ -46,10 +46,13 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
       $form['access_id']['#value'] = array(key($form['access_id']['#options']));
       $form['access_id']['#default_value'] = key($form['access_id']['#options']);
     }
-    // expand the fieldset
-    if ($form_state['input']['name'] || $form_state['input']['uid_revision'] || $form_state['input']['date_filter']['min']['date'] || $form_state['input']['date_filter']['max']['date']) {
-         $form['secondary']['#collapsed'] = FALSE;
-    } 
+    // expand the fieldset on the "all recent" secondary filters
+    if ( isset($form_state['input']['name']) ||
+         isset($form_state['input']['uid_revision']) ||
+         isset($form_state['input']['date_filter']['min']['date']) ||
+         isset($form_state['input']['date_filter']['max']['date'])) {
+      $form['secondary']['#collapsed'] = FALSE;
+    }
   }
 }
 
@@ -93,6 +96,14 @@ function gsb_feature_workbench_views_default_views_alter(&$views) {
 
   if (isset($views['workbench_current_user'])) {
     $views['workbench_current_user']->disabled = TRUE;
+  }
+
+  if (isset($views['workbench_edited'])) {
+    $views['workbench_edited']->disabled = TRUE;
+  }
+
+  if (isset($views['workbench_recent_content'])) {
+    $views['workbench_recent_content']->disabled = TRUE;
   }
 
 }
