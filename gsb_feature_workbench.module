@@ -41,10 +41,13 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
     }
     // Make the 'Section' a single-line combobox
     if (isset($form['access_id'])) {
-      $form['access_id']['#size'] = null;
-      unset($form['access_id']['#multiple']);
-      $form['access_id']['#value'] = array(key($form['access_id']['#options']));
-      $form['access_id']['#default_value'] = key($form['access_id']['#options']);
+      asort($form['access_id']['#options']);
+      $any_array = array('-5' => '- Any -');
+      $form['access_id']['#options'] = $any_array + $form['access_id']['#options'];
+      $form['access_id']['#default_value'] = '-5';
+      $form['access_id']['#multiple'] = FALSE;
+      unset($form['access_id']['#size']);
+      $form['#validate'][] = 'gsb_feature_workbench_form_alter_validate';
     }
     // expand the fieldset on the "all recent" secondary filters
     if ( isset($form_state['input']['name']) ||
@@ -52,6 +55,18 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
          isset($form_state['input']['date_filter']['min']['date']) ||
          isset($form_state['input']['date_filter']['max']['date'])) {
       $form['secondary']['#collapsed'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Setup the workbench (section) access_id form values
+ */
+function gsb_feature_workbench_form_alter_validate(&$form, &$form_state) {
+  if (isset($form_state['values']['access_id'])) {
+    $access_id = $form_state['values']['access_id'];
+    if (isset($form['access_id']) && !is_array($access_id)) {
+      form_set_value($form['access_id'], array($access_id => $access_id), $form_state);
     }
   }
 }
