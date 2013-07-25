@@ -57,6 +57,95 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
       $form['secondary']['#collapsed'] = FALSE;
     }
   }
+  // alter the workbench access select to use a hierarchy_select
+  _gsb_feature_workbench_access_select_alter($form, $form_state);
+}
+
+function _gsb_feature_workbench_access_select_alter(&$form, $form_state) {
+
+  if (!isset($form['workbench_access'])) {
+    return;
+  }
+
+  if (isset($form['workbench_access']['#type']) && $form['workbench_access']['#type'] == 'checkbox') {
+    return;
+  }
+
+  if (count($form['workbench_access']['workbench_access']['#options']) == 1) {
+    $form['workbench_access']['workbench_access']['#access'] = FALSE;
+    $form['workbench_access']['workbench_access']['#default_value'][] = key($form['workbench_access']['workbench_access']['#options']);
+    $form['workbench_access_section'] = array(
+      '#markup' => t('Section: @section', array('@section' => reset($form['workbench_access']['workbench_access']['#options']))),
+    );
+    return;
+  }
+
+  $form['workbench_access']['workbench_access']['#type'] = 'hierarchical_select';
+
+  unset($form['workbench_access']['workbench_access']['#options']);
+
+  $vocab_object = _gsb_feature_workbench_get_vocabulary_by_name('workbench_sections');
+  $vid = $vocab_object->vid;
+
+  $form['workbench_access']['workbench_access']['#config'] = array(
+    'module' => 'hs_taxonomy',
+    'params' => array(
+      'vid' => $vid,
+      'exclude_tid' => NULL,
+      'root_term' => NULL,
+      'entity_count_for_node_type' => NULL,
+    ),
+    'save_lineage'    => 0,
+    'enforce_deepest' => 0,
+    'entity_count'    => 0,
+    'require_entity'  => 0,
+    'resizable'       => 1,
+    'level_labels' => array(
+      'status' => 0,
+      'labels' => array(
+        0 => t('Main category'),
+        1 => t('Subcategory'),
+        2 => t('Third level category'),
+      ),
+    ),
+    'dropbox' => array(
+      'status'   => 1,
+      'title'    => t('All selections'),
+      'limit'    => 0,
+      'reset_hs' => 1,
+    ),
+    'editability' => array(
+      'status'           => 0,
+      'item_types'       => array(),
+      'allowed_levels'   => array(
+        0 => 0,
+        1 => 0,
+        2 => 1,
+      ),
+      'allow_new_levels' => 0,
+      'max_levels'       => 3,
+    ),
+    // These settings cannot be configured through the UI: they can only be
+    // overridden through code.
+    'animation_delay'    => 400,
+    'special_items'      => array(),
+    'render_flat_select' => 0,
+  );
+
+  $element_info = element_info('hierarchical_select');
+  $form['workbench_access']['workbench_access']['#process'] = array_merge($element_info['#process'], array('hs_taxonomy_widget_process'));
+
+  $form['#validate'][] = '_gsb_feature_workbench_access_select_alter_validate';
+
+}
+
+function _gsb_feature_workbench_access_select_alter_validate(&$form, &$form_state) {
+  $new_values = array();
+  foreach($form['workbench_access']['workbench_access']['#value'] as $key => $value) {
+    $term_id = $value['tid'];
+    $new_values[$term_id] = $term_id;
+  }
+  $form_state['values']['workbench_access'] = $new_values;
 }
 
 /**
@@ -240,3 +329,24 @@ function gsb_feature_workbench_views_pre_view(&$view, &$display_id, &$args) {
   // Set the new fields array on the actual view.
   $fields = $new_view_fields;
 }
+
+ /**
+ * This function will return a vocabulary object which matches the
+ * given machine_name. Will return null if no such vocabulary exists.
+ *
+ * @param String $vocabulary_name
+ *   This is the machine_name of the section which is required
+ * @return Object
+ *   This is the vocabulary object with the name
+ *   or null if no such vocabulary exists
+ */
+function _gsb_feature_workbench_get_vocabulary_by_name($vocabulary_name) {
+  $vocabs = taxonomy_get_vocabularies(NULL);
+  foreach ($vocabs as $vocab_object) {
+    if ($vocab_object->machine_name == $vocabulary_name) {
+      return $vocab_object;
+    }
+  }
+  return NULL;
+}
+
