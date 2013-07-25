@@ -61,17 +61,25 @@ function gsb_feature_workbench_form_alter(&$form, $form_state) {
   _gsb_feature_workbench_access_select_alter($form, $form_state);
 }
 
+/**
+ * Change the workbench_access field from type 'select' to 'hierachy_select'
+ * If there is only one workbench_access option, default to that and show as just markup.
+ */
 function _gsb_feature_workbench_access_select_alter(&$form, $form_state) {
 
   if (!isset($form['workbench_access'])) {
+    // no workbench_access field, so nothin' to do - we is outta here
     return;
   }
 
   if (isset($form['workbench_access']['#type']) && $form['workbench_access']['#type'] == 'checkbox') {
+    // we can get a checkbox for this field if we are editing the taxonomy directly 
+    // in this specific case we don't need to do anything to alter the field
     return;
   }
 
   if (count($form['workbench_access']['workbench_access']['#options']) == 1) {
+    // There is only one workbench_access option, default to that and show as just markup.
     $form['workbench_access']['workbench_access']['#access'] = FALSE;
     $form['workbench_access']['workbench_access']['#default_value'][] = key($form['workbench_access']['workbench_access']['#options']);
     $form['workbench_access_section'] = array(
@@ -139,6 +147,10 @@ function _gsb_feature_workbench_access_select_alter(&$form, $form_state) {
 
 }
 
+/**
+ * When we are using a 'hierarchy_select' type field for workbench_access we need to 
+ * doctor up the value a bit to get workbench_access to handle it correctly
+ */
 function _gsb_feature_workbench_access_select_alter_validate(&$form, &$form_state) {
   $new_values = array();
   foreach($form['workbench_access']['workbench_access']['#value'] as $key => $value) {
