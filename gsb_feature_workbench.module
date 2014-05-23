@@ -250,7 +250,7 @@ function gsb_feature_workbench_views_query_alter(&$view, &$query) {
     if (isset($view->exposed_data['access_id']['-5']) && $view->exposed_data['access_id']['-5'] == -5) {
       // then we remove the where clause that is filtering by node type
       foreach ($query->where as $key => $value) {
-        if ($value['conditions'][0]['field'] == 'node_node_revision.type') {
+        if (!empty($value['conditions']) && $value['conditions'][0]['field'] == 'node_node_revision.type') {  
           unset($query->where[$key]);
         }
       } 
